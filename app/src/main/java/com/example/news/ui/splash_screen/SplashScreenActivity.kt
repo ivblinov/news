@@ -20,7 +20,7 @@ class SplashScreenActivity : AppCompatActivity() {
 
         binding.lottieView.playAnimation()
         binding.lottieView.addAnimatorUpdateListener {
-            if (it.animatedValue as Float > 0.99) {     // изменить на 0.99
+            if (it.animatedValue as Float > 0.09) {     // изменить на 0.99
                 binding.lottieView.cancelAnimation()
                 App.instance.router.newRootScreen(Screens.mainScreen(this))
             }

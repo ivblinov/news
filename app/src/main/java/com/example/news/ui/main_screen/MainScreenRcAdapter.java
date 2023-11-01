@@ -30,7 +30,7 @@ public class MainScreenRcAdapter extends RecyclerView.Adapter<MainScreenViewHold
     @Override
     public void onBindViewHolder(@NonNull MainScreenViewHolder holder, int position) {
 //        Log.d(TAG, "onBindViewHolder: " + articlesList.get(position).source.name);
-        holder.binding.article.setText(articlesList.get(position).content);
+        holder.binding.article.setText(articlesList.get(position).title);
         holder.binding.articleTitle.setText(articlesList.get(position).source.name);
         Glide
                 .with(holder.binding.getRoot())
