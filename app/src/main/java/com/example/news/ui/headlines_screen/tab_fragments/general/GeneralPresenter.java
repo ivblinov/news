@@ -36,6 +36,8 @@ public class GeneralPresenter extends MvpPresenter<General> {
 
     void orderData() {
 
+        getViewState().hideOrShowProgress(true);
+
         Observer<Call<Articles>> observer = new Observer<Call<Articles>>() {
             @Override
             public void onError(Throwable e) {
@@ -68,6 +70,7 @@ public class GeneralPresenter extends MvpPresenter<General> {
                             Log.d(TAG, "onResponse: " + response.body().article[1].author);
 //                            getViewState().getData(response.body().article);
                             getViewState().createRecycler(Arrays.asList(response.body().article));
+                            getViewState().hideOrShowProgress(false);
                         }
 
                         else Log.d(TAG, "not successful");

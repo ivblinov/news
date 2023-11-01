@@ -11,6 +11,8 @@ import moxy.viewstate.strategy.alias.AddToEndSingle;
 public interface General extends MvpView {
     void createRecycler(List<Articles.Article> asList);
 
+    void hideOrShowProgress(Boolean flag);
+
 /*    List<Articles.Article> orderData();
 
     void getData(Articles.Article[] article);*/

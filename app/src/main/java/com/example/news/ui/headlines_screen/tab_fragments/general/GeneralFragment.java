@@ -60,8 +60,17 @@ public class GeneralFragment extends MvpAppCompatFragment implements General {
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(new MainScreenRcAdapter(articles));
         binding.recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-
     }
+
+    @Override
+    public void hideOrShowProgress(Boolean flag) {
+        if (flag)
+            binding.progress.setVisibility(View.VISIBLE);
+        else
+            binding.progress.setVisibility(View.INVISIBLE);
+    }
+
+
 
 /*    @Override
     public List<Articles.Article> orderData() {
