@@ -1,18 +1,11 @@
-package com.example.news.ui.headlines_screen.tab_fragments.general;
+package com.example.news.ui.headlines_screen.tab_fragments.science;
 
-import android.content.Context;
 import android.util.Log;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.news.data.retrofit.Articles;
 import com.example.news.data.retrofit.Repository;
-import com.example.news.databinding.FragmentGeneralBinding;
-import com.example.news.ui.main_screen.MainScreenRcAdapter;
 
 import java.util.Arrays;
-import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
@@ -26,8 +19,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @InjectViewState
-public class GeneralPresenter extends MvpPresenter<General> {
-
+public class SciencePresenter extends MvpPresenter<Science> {
     Repository repository = new Repository();
 
     protected void onFirstViewAttach() {
@@ -35,7 +27,6 @@ public class GeneralPresenter extends MvpPresenter<General> {
     }
 
     void orderData() {
-
         getViewState().hideOrShowProgress(true);
 
         Observer<Call<Articles>> observer = new Observer<Call<Articles>>() {
@@ -55,7 +46,7 @@ public class GeneralPresenter extends MvpPresenter<General> {
             }
 
             @Override
-            public void onNext(@NonNull Call<Articles> articlesCall) {
+            public void onNext(@androidx.annotation.NonNull @NonNull Call<Articles> articlesCall) {
                 articlesCall.enqueue(new Callback<Articles>() {
 
                     @Override
@@ -73,12 +64,10 @@ public class GeneralPresenter extends MvpPresenter<General> {
                         Log.d(TAG, "onFailure: " + t);
                     }
                 });
-
-
             }
         };
 
-        repository.observableArticles("general")
+        repository.observableArticles("science")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);

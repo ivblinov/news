@@ -12,5 +12,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="general_tab">General</string>
     <string name="business_tab">Business</string>
-    <string name="traveling_tab">Traveling</string>
+    <string name="sports_tab">Sports</string>
+    <string name="health_tab">Health</string>
+    <string name="entertainment_tab">Entertainment</string>
+    <string name="technology_tab">Technology</string>
+    <string name="science_tab">Science</string>
 </resources>

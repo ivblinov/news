@@ -20,4 +20,9 @@
     <style name="TitleApp" parent="Theme.News">
         <item name="android:textSize">22sp</item>
     </style>
+
+    <style name="TabText" parent="Theme.News">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

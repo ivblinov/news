@@ -6,9 +6,9 @@ import retrofit2.Call;
 
 public class Repository {
 
-    public Observable<Call<Articles>> observableArticles() {
+    public Observable<Call<Articles>> observableArticles(String category) {
         NewsService newsService = new NewsService();
-        Call<Articles> articles = newsService.apiService.getTopHeadlines();
+        Call<Articles> articles = newsService.apiService.getTopHeadlines(category);
         Log.d(TAG, "observableArticles: " + articles);
 
         return Observable.just(articles);
