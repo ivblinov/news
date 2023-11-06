@@ -11,7 +11,13 @@
     <color name="primary_50">#00829C</color>
     <color name="primary">#00677C</color>
     <color name="gray_divider">#BFC8CC</color>
+    <color name="gray_text_view">#F8F9FB</color>
+
+
+
     <color name="black_text_title">#191C1D</color>
     <color name="black_tab_text">#40484B</color>
+
+    <color name="transparentStatusBar">#00000000</color>
 
 </resources>

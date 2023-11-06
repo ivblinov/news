@@ -2,8 +2,11 @@ package com.example.news.domain
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import com.example.news.ui.headlines_screen.HeadlinesFragment
 import com.example.news.ui.main_screen.MainScreenActivity
+import com.example.news.ui.news_screen.ArticleParcel
+import com.example.news.ui.news_screen.NewsScreenFragment
 import com.example.news.ui.saved_screen.SavedFragment
 import com.example.news.ui.sources_screen.SourcesFragment
 import com.github.terrakok.cicerone.androidx.ActivityScreen
@@ -17,4 +20,6 @@ object Screens {
     fun savedFragment(): FragmentScreen = FragmentScreen { SavedFragment.newInstance() }
 
     fun sourcesFragment(): FragmentScreen = FragmentScreen { SourcesFragment.newInstance() }
+
+    fun newsScreenFragment(param: ArticleParcel?): FragmentScreen = FragmentScreen { NewsScreenFragment.newInstance(param) }
 }

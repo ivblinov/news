@@ -1,9 +1,15 @@
 package com.example.news.ui.main_screen
 
+import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
+import android.view.View
 import androidx.activity.viewModels
+import androidx.core.view.WindowCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -40,6 +46,17 @@ class MainScreenActivity : AppCompatActivity() {
             true
         }
 
+        binding.buttonBack.setOnClickListener {
+            Log.d(TAG, "back button")
+        }
+
+        binding.topAppBarNewsScreen.setOnMenuItemClickListener {
+            if(it.itemId == R.id.save) {
+                Log.d(TAG, "saved new!")
+            }
+            true
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.state.collect { state ->
@@ -53,6 +70,51 @@ class MainScreenActivity : AppCompatActivity() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.statusBarState.collect { statusBarState ->
+                    when (statusBarState) {
+                        StateStatusBar.FullScreen -> {
+                            Log.d(TAG, "onCreate: hide")
+                            hideStatusBar()
+                        }
+                        StateStatusBar.NotFullScreen -> {
+                            Log.d(TAG, "onCreate: show")
+                            showStatusBar()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun hideStatusBar() {
+        Log.d(TAG, "hideStatusBar: ")
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        with(binding) {
+            appBarLayout.visibility = View.GONE
+            appBarLayoutNewsScreen.visibility = View.VISIBLE
+            buttonBack.visibility = View.VISIBLE
+        }
+        setStatusBarColor("#00000000")
+    }
+
+    private fun showStatusBar() {
+        Log.d(TAG, "showStatusBar: ")
+        WindowCompat.setDecorFitsSystemWindows(window, true)
+        with(binding) {
+            appBarLayout.visibility = View.VISIBLE
+            appBarLayoutNewsScreen.visibility = View.GONE
+            buttonBack.visibility = View.GONE
+        }
+        setStatusBarColor("#009EBD")
+    }
+
+    private fun setStatusBarColor(color: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = Color.parseColor(color)
+        }
     }
 
     override fun onResumeFragments() {
@@ -63,6 +125,7 @@ class MainScreenActivity : AppCompatActivity() {
     override fun onPause() {
         App.instance.navigatorHolder.removeNavigator()
         super.onPause()
+
     }
 
     private fun newRootScreen(screen: Screen) {

@@ -1,14 +1,22 @@
 package com.example.news.ui.main_screen;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.news.data.retrofit.Articles;
 import com.example.news.databinding.RecyclerItemBinding;
+import com.example.news.domain.App;
+import com.example.news.domain.Screens;
+import com.example.news.ui.news_screen.ArticleParcel;
+import com.github.terrakok.cicerone.Screen;
 
 import java.util.List;
 
@@ -36,6 +44,20 @@ public class MainScreenRcAdapter extends RecyclerView.Adapter<MainScreenViewHold
                 .with(holder.binding.getRoot())
                 .load(articlesList.get(position).urlToImage)
                 .into(holder.binding.imageArticle);
+
+        holder.binding.getRoot().setOnClickListener(v -> {
+            ArticleParcel parceObject = new ArticleParcel(
+                    articlesList.get(position).urlToImage,
+                    articlesList.get(position).title,
+                    articlesList.get(position).publishedAt,
+                    articlesList.get(position).content,
+                    articlesList.get(position).source.name,
+                    articlesList.get(position).url
+            );
+
+            App.Companion.getInstance().getRouter().navigateTo(Screens.INSTANCE.newsScreenFragment(parceObject));
+
+        });
     }
 
     @Override

@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 private const val TAG = "MyLog"
-class MainScreenViewModel : ViewModel() {
+object MainScreenViewModel : ViewModel() {
 
     private val _state = MutableStateFlow<StateBottomNav>(StateBottomNav.Initial)
     val state = _state.asStateFlow()
@@ -28,6 +28,21 @@ class MainScreenViewModel : ViewModel() {
     fun clickedSourcesButton() {
         viewModelScope.launch {
             _state.value = StateBottomNav.Sources
+        }
+    }
+
+    private val _statusBarState = MutableStateFlow<StateStatusBar>(StateStatusBar.NotFullScreen)
+    val statusBarState = _statusBarState.asStateFlow()
+
+    fun openedNewsScreen() {
+        viewModelScope.launch {
+            _statusBarState.value = StateStatusBar.FullScreen
+        }
+    }
+
+    fun closedNewsScreen() {
+        viewModelScope.launch {
+            _statusBarState.value = StateStatusBar.NotFullScreen
         }
     }
 
