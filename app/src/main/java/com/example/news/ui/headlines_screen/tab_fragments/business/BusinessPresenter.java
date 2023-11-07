@@ -30,17 +30,17 @@ public class BusinessPresenter extends MvpPresenter<Business> {
         Observer<Call<Articles>> observer = new Observer<Call<Articles>>() {
             @Override
             public void onError(Throwable e) {
-                Log.d(TAG, "onError: ");
+
             }
 
             @Override
             public void onComplete() {
-                Log.d(TAG, "onComplete: ");
+
             }
 
             @Override
             public void onSubscribe(@NonNull Disposable d) {
-                Log.d(TAG, "onSubscribe: ");
+
             }
 
             @Override

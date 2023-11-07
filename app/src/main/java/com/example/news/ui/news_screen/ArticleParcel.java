@@ -14,6 +14,7 @@ public class ArticleParcel implements Parcelable {
     public String publishedAt;
     public String content;
     public String name;
+    public String url;
 
     public ArticleParcel(
             String urlToImage,
@@ -51,8 +52,6 @@ public class ArticleParcel implements Parcelable {
             return new ArticleParcel[size];
         }
     };
-
-    public String url;
 
     @Override
     public int describeContents() {

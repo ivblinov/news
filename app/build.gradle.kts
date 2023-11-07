@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
+    id("kotlin-kapt")
+//    id("com.google.devtools.ksp")
 }
 
 android {
@@ -41,17 +43,18 @@ android {
 }
 
 dependencies {
+    val roomVersion = "2.6.0"
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // viewModel
-    implementation("androidx.fragment:fragment-ktx:1.6.1")
+    implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
 
     // fragment - Java
-    implementation("androidx.fragment:fragment:1.6.1")
+    implementation("androidx.fragment:fragment:1.6.2")
 
     // recyclerView
     implementation("androidx.recyclerview:recyclerview:1.3.2")
@@ -68,7 +71,9 @@ dependencies {
     // MVP - moxy
     implementation("com.github.moxy-community:moxy:2.2.2")
     implementation("com.github.moxy-community:moxy-androidx:2.2.2")
-    annotationProcessor("com.github.moxy-community:moxy-compiler:2.2.2")
+    kapt("com.github.moxy-community:moxy-compiler:2.2.2")
+//    ksp("com.github.moxy-community:moxy-compiler:2.2.2")
+//    annotationProcessor("com.github.moxy-community:moxy-compiler:2.2.2")
 
     // Rx
     implementation("io.reactivex.rxjava3:rxjava:3.1.8")
@@ -78,6 +83,12 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.retrofit2:adapter-rxjava:2.9.0")
+
+    // room
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+//    ksp("androidx.room:room-compiler:$roomVersion")
 
     // glide
     implementation("com.github.bumptech.glide:glide:4.16.0")

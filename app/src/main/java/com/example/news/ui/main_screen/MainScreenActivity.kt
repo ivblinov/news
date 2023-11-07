@@ -2,14 +2,12 @@ package com.example.news.ui.main_screen
 
 import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -48,11 +46,12 @@ class MainScreenActivity : AppCompatActivity() {
 
         binding.buttonBack.setOnClickListener {
             Log.d(TAG, "back button")
+            viewModel.clickedOnNavigateBack()
         }
 
         binding.topAppBarNewsScreen.setOnMenuItemClickListener {
             if(it.itemId == R.id.save) {
-                Log.d(TAG, "saved new!")
+                viewModel.clickedOnSaveNews()
             }
             true
         }
@@ -83,6 +82,9 @@ class MainScreenActivity : AppCompatActivity() {
                             Log.d(TAG, "onCreate: show")
                             showStatusBar()
                         }
+                        StateStatusBar.CameBack -> {
+                            exit()
+                        }
                     }
                 }
             }
@@ -90,8 +92,8 @@ class MainScreenActivity : AppCompatActivity() {
     }
 
     private fun hideStatusBar() {
-        Log.d(TAG, "hideStatusBar: ")
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
         with(binding) {
             appBarLayout.visibility = View.GONE
             appBarLayoutNewsScreen.visibility = View.VISIBLE
@@ -101,8 +103,8 @@ class MainScreenActivity : AppCompatActivity() {
     }
 
     private fun showStatusBar() {
-        Log.d(TAG, "showStatusBar: ")
         WindowCompat.setDecorFitsSystemWindows(window, true)
+
         with(binding) {
             appBarLayout.visibility = View.VISIBLE
             appBarLayoutNewsScreen.visibility = View.GONE
@@ -126,6 +128,11 @@ class MainScreenActivity : AppCompatActivity() {
         App.instance.navigatorHolder.removeNavigator()
         super.onPause()
 
+    }
+
+    fun exit() {
+        App.instance.router.exit()
+        Log.d(TAG, "exit: ")
     }
 
     private fun newRootScreen(screen: Screen) {

@@ -5,4 +5,6 @@ sealed class StateStatusBar {
     object FullScreen : StateStatusBar()
 
     object NotFullScreen : StateStatusBar()
+
+    object CameBack : StateStatusBar()
 }

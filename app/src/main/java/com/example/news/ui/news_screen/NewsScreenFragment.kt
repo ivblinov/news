@@ -15,6 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.example.news.databinding.FragmentNewsScreenBinding
 import com.example.news.ui.main_screen.MainScreenViewModel
+import com.example.news.ui.main_screen.StateIconSave
 import com.example.news.ui.main_screen.StateStatusBar
 import kotlinx.coroutines.launch
 
@@ -50,13 +51,14 @@ class NewsScreenFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.statusBarState.collect { statusBarState ->
-                    when (statusBarState) {
-                        StateStatusBar.FullScreen -> {
-                            Log.d(TAG, "fullScreen")
+                viewModel.savedStatus.collect { savedStatus ->
+                    when (savedStatus) {
+                        StateIconSave.Saved -> {
+                            param1?.let { viewModel.saveNews(it) }
+                            Log.d(TAG, "StateIconSave - Saved")
                         }
-                        StateStatusBar.NotFullScreen -> {
-                            Log.d(TAG, "notFullScreen")
+                        StateIconSave.NotSaved -> {
+                            Log.d(TAG, "StateIconSave - Not Saved")
                         }
                     }
                 }
@@ -70,7 +72,6 @@ class NewsScreenFragment : Fragment() {
             publishedAt.text = param1?.publishedAt
             nameWallpaper.text = param1?.name
             content.text = param1?.content
-            Log.d(TAG, "url: ${param1?.url}")
         }
 
         Glide
