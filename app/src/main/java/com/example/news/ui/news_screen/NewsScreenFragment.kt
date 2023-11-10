@@ -6,17 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
+import com.example.news.data.room.Article
 import com.example.news.databinding.FragmentNewsScreenBinding
 import com.example.news.ui.main_screen.MainScreenViewModel
 import com.example.news.ui.main_screen.StateIconSave
-import com.example.news.ui.main_screen.StateStatusBar
 import kotlinx.coroutines.launch
 
 private const val ARG_PARAM1 = "param1"
@@ -49,13 +48,24 @@ class NewsScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var savedList: List<Article>? = null
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.allArticles.collect {articles ->
+                    savedList = articles
+                    Log.d(TAG, "savedList.lastIndex = ${savedList?.size}")
+                }
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.savedStatus.collect { savedStatus ->
                     when (savedStatus) {
                         StateIconSave.Saved -> {
-                            param1?.let { viewModel.saveNews(it) }
-                            Log.d(TAG, "StateIconSave - Saved")
+                            param1?.let { viewModel.saveNews(it, savedList?.size) }
+                            Log.d(TAG, "_________StateIconSave - Saved")
                         }
                         StateIconSave.NotSaved -> {
                             Log.d(TAG, "StateIconSave - Not Saved")

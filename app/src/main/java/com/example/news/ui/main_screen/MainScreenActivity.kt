@@ -37,15 +37,11 @@ class MainScreenActivity : AppCompatActivity() {
                 R.id.button_headlines -> {viewModel.clickedHeadlinesButton()}
                 R.id.button_saved -> {viewModel.clickedSavedButton()}
                 R.id.button_sources -> { viewModel.clickedSourcesButton() }
-
-//                R.id.button_headlines -> {newRootScreen(Screens.HeadlinesFragment())}
-//                R.id.button_saved -> {newRootScreen(Screens.SavedFragment())}
             }
             true
         }
 
         binding.buttonBack.setOnClickListener {
-            Log.d(TAG, "back button")
             viewModel.clickedOnNavigateBack()
         }
 
@@ -60,10 +56,22 @@ class MainScreenActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.state.collect { state ->
                     when (state) {
-                        StateBottomNav.Initial -> { newRootScreen(Screens.headlinesFragment()) }
-                        StateBottomNav.Headlines -> { newRootScreen(Screens.headlinesFragment()) }
-                        StateBottomNav.Saved -> { newRootScreen(Screens.savedFragment()) }
-                        StateBottomNav.Sources -> { newRootScreen(Screens.sourcesFragment()) }
+                        StateBottomNav.Initial -> {
+                            newRootScreen(Screens.headlinesFragment())
+                            binding.topAppBar.setTitle(R.string.headlines)
+                        }
+                        StateBottomNav.Headlines -> {
+                            newRootScreen(Screens.headlinesFragment())
+                            binding.topAppBar.setTitle(R.string.headlines)
+                        }
+                        StateBottomNav.Saved -> {
+                            newRootScreen(Screens.savedFragment())
+                            binding.topAppBar.setTitle(R.string.saved)
+                        }
+                        StateBottomNav.Sources -> {
+                            newRootScreen(Screens.sourcesFragment())
+                            binding.topAppBar.setTitle(R.string.sources)
+                        }
                         else -> Log.d(TAG, "onCreate: ")
                     }
                 }
@@ -75,11 +83,9 @@ class MainScreenActivity : AppCompatActivity() {
                 viewModel.statusBarState.collect { statusBarState ->
                     when (statusBarState) {
                         StateStatusBar.FullScreen -> {
-                            Log.d(TAG, "onCreate: hide")
                             hideStatusBar()
                         }
                         StateStatusBar.NotFullScreen -> {
-                            Log.d(TAG, "onCreate: show")
                             showStatusBar()
                         }
                         StateStatusBar.CameBack -> {
@@ -114,9 +120,7 @@ class MainScreenActivity : AppCompatActivity() {
     }
 
     private fun setStatusBarColor(color: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = Color.parseColor(color)
-        }
+        window.statusBarColor = Color.parseColor(color)
     }
 
     override fun onResumeFragments() {
@@ -127,12 +131,10 @@ class MainScreenActivity : AppCompatActivity() {
     override fun onPause() {
         App.instance.navigatorHolder.removeNavigator()
         super.onPause()
-
     }
 
-    fun exit() {
+    private fun exit() {
         App.instance.router.exit()
-        Log.d(TAG, "exit: ")
     }
 
     private fun newRootScreen(screen: Screen) {

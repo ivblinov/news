@@ -11,8 +11,11 @@ class Repository {
     var id: Int = 0
     private val articleDao = App.instance.db.articleDao()
 
-    suspend fun saveNews(news: ArticleParcel) {
+    suspend fun saveNews(news: ArticleParcel, articleId: Int?) {
         Log.d(TAG, "saveNews: ")
+        if (articleId != null) {
+            id = articleId
+        }
         articleDao.insert(
             Article(
                 id = ++id,

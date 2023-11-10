@@ -39,7 +39,6 @@
         android:fontFamily="@font/roboto_regular"
         android:lineSpacingExtra="5sp"
         android:maxLines="2"
-        android:text="jdfv jkdfv jndkjfvn kjndfv kjndfkj vndkjvn fkdjnvf kjndfv kjndfvk ndkjfvn kdjnfv kjdnfv kjndfvjk ndjkfvn dkjnvf kjdnvf kjdnfvkj ndkjfvn kjdnfv kjndfvjk ndkjfvn kjdnfv kjndfv jkndkjfvn kjdnfv kjndfv jnkdjvnf kjdnfvk jndkfj vnk"
         android:textColor="@color/black_text_title"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"

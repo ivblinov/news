@@ -47,7 +47,6 @@ public class BusinessFragment extends MvpAppCompatFragment implements Business {
 
     @Override
     public void createRecycler(@NonNull List<Articles.Article> articles) {
-        Log.d(TAG, "createRecycler: " + articles.get(0).author);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext());
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(new MainScreenRcAdapter(articles));

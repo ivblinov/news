@@ -46,12 +46,10 @@ public class GeneralFragment extends MvpAppCompatFragment implements General {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(TAG, "instance initializer: ");
         presenter.orderData();
     }
 
     public void createRecycler(@NonNull List<Articles.Article> articles) {
-        Log.d(TAG, "createRecycler: " + articles.get(0).author);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext());
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(new MainScreenRcAdapter(articles));
@@ -65,20 +63,6 @@ public class GeneralFragment extends MvpAppCompatFragment implements General {
         else
             binding.progress.setVisibility(View.INVISIBLE);
     }
-
-
-
-/*    @Override
-    public List<Articles.Article> orderData() {
-//        presenter.orderData();
-        return null;
-    }
-
-    @Override
-    public void getData(Articles.Article[] article) {
-
-    }*/
-
 
     private static final String TAG="MyLog";
 }

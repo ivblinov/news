@@ -69,12 +69,12 @@ object MainScreenViewModel : ViewModel() {
         }
     }
 
-    fun saveNews(news: ArticleParcel) {
+    fun saveNews(news: ArticleParcel, articleId: Int?) {
         viewModelScope.launch {
-            repository.saveNews(news)
+            repository.saveNews(news, articleId)
+            _savedStatus.value = StateIconSave.NotSaved
         }
     }
 
     val allArticles = this.articleDao.getAll()
-
 }
