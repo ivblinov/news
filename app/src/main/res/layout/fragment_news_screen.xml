@@ -87,6 +87,8 @@
         android:paddingHorizontal="16dp"
         android:paddingTop="16dp"
         android:textColor="@color/black_text_title"
+        android:textColorLink="@color/black_text_title"
+        android:textColorHighlight="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -29,6 +29,11 @@ class SavedRcAdapter(private val articleList: List<Article>) : RecyclerView.Adap
                 .with(root)
                 .load(item.urlToImage)
                 .into(imageArticle)
+
+            Glide
+                .with(root)
+                .load("https://besticon-demo.herokuapp.com/icon?url=${item.url}&size=50..100..500")
+                .into(logo)
         }
 
         holder.binding.root.setOnClickListener {

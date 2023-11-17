@@ -1,18 +1,16 @@
 package com.example.news.ui.headlines_screen.tab_fragments.general;
 
-import android.content.Context;
 import android.util.Log;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.example.news.data.retrofit.Articles;
 import com.example.news.data.retrofit.Repository;
-import com.example.news.databinding.FragmentGeneralBinding;
-import com.example.news.ui.main_screen.MainScreenRcAdapter;
+import com.example.news.ui.headlines_screen.ArticlesDiffUtilCallBack;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
@@ -29,33 +27,31 @@ import retrofit2.Response;
 public class GeneralPresenter extends MvpPresenter<General> {
 
     Repository repository = new Repository();
+    Integer pageSize = 12;
+    Integer page = 1;
+    ArrayList<Articles.Article> oldArticlesList = new ArrayList<>();
+    ArrayList<Articles.Article> newArticlesList = new ArrayList<>();
 
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
     }
 
     void orderData() {
-
         getViewState().hideOrShowProgress(true);
 
         Observer<Call<Articles>> observer = new Observer<Call<Articles>>() {
             @Override
             public void onError(Throwable e) {
-                Log.d(TAG, "onError: ");
             }
-
             @Override
             public void onComplete() {
-                Log.d(TAG, "onComplete: ");
             }
-
             @Override
             public void onSubscribe(@NonNull Disposable d) {
-                Log.d(TAG, "onSubscribe: ");
             }
 
             @Override
-            public void onNext(@NonNull Call<Articles> articlesCall) {
+            public void onNext(@androidx.annotation.NonNull @NonNull Call<Articles> articlesCall) {
                 articlesCall.enqueue(new Callback<Articles>() {
 
                     @Override
@@ -63,25 +59,73 @@ public class GeneralPresenter extends MvpPresenter<General> {
                         if (response.isSuccessful()) {
                             assert response.body() != null;
                             getViewState().createRecycler(Arrays.asList(response.body().article));
+                            Collections.addAll(oldArticlesList, response.body().article);
+                            Collections.addAll(newArticlesList, response.body().article);
                             getViewState().hideOrShowProgress(false);
                         }
-                        else Log.d(TAG, "not successful");
                     }
-
                     @Override
                     public void onFailure(Call<Articles> call, Throwable t) {
-                        Log.d(TAG, "onFailure: " + t);
                     }
                 });
-
-
             }
         };
-
-        repository.observableArticles("general")
+        repository.observableArticles("general", pageSize, page)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+    }
+
+    public void getExtraArticles() {
+        getViewState().hideOrShowProgress(true);
+
+        Observer<Call<Articles>> observer = new Observer<Call<Articles>>() {
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+            }
+
+            @Override
+            public void onNext(@androidx.annotation.NonNull @NonNull Call<Articles> articlesCall) {
+                articlesCall.enqueue(new Callback<Articles>() {
+                    @Override
+                    public void onResponse(Call<Articles> call, Response<Articles> response) {
+                        if (response.isSuccessful()) {
+                            assert response.body() != null;
+                            Collections.addAll(newArticlesList, response.body().article);
+                            getViewState().reload();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<Articles> call, Throwable t) {
+                    }
+                });
+            }
+        };
+
+        page += 1;
+
+        repository.observableArticles("general", pageSize, page)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer);
+    }
+
+    public DiffUtil.DiffResult updateList() {
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(
+                new ArticlesDiffUtilCallBack(
+                        oldArticlesList,
+                        newArticlesList
+                )
+        );
+        return result;
     }
 
     private static final String TAG = "MyLog";

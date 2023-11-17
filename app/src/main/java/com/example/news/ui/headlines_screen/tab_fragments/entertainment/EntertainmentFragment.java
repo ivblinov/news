@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,13 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.news.R;
 import com.example.news.data.retrofit.Articles;
 import com.example.news.databinding.FragmentEntertainmentBinding;
 import com.example.news.ui.main_screen.MainScreenRcAdapter;
 
 import org.jetbrains.annotations.Contract;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import moxy.MvpAppCompatFragment;
@@ -29,6 +30,11 @@ import moxy.presenter.InjectPresenter;
 public class EntertainmentFragment extends MvpAppCompatFragment implements Entertainment {
 
     private FragmentEntertainmentBinding binding;
+    Integer itemCount;
+    View lastVisibleItem;
+    Boolean loadData = false;
+    RecyclerView.LayoutManager layoutManager;
+    MainScreenRcAdapter adapter;
 
     @InjectPresenter
     EntertainmentPresenter presenter;
@@ -43,6 +49,7 @@ public class EntertainmentFragment extends MvpAppCompatFragment implements Enter
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentEntertainmentBinding.inflate(inflater, container, false);
+        layoutManager = new LinearLayoutManager(requireContext());
         return binding.getRoot();
     }
 
@@ -50,14 +57,37 @@ public class EntertainmentFragment extends MvpAppCompatFragment implements Enter
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.orderData();
+
+        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                itemCount = layoutManager.getItemCount();
+                lastVisibleItem = layoutManager.findViewByPosition(itemCount - 1);
+                if (lastVisibleItem != null && !loadData) {
+                    presenter.getExtraArticles();
+                    hideOrShowProgress(true);
+                    loadData = true;
+                }
+            }
+        });
+
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+
+            Log.d(TAG, "onRefresh: ");
+            presenter.page = 0;
+            presenter.newArticlesList = new ArrayList<>();
+            presenter.getExtraArticles();
+            binding.progress.setVisibility(View.INVISIBLE);
+            binding.swipeRefreshLayout.setRefreshing(false);
+        });
     }
 
     @Override
     public void createRecycler(@NonNull List<Articles.Article> articles) {
-        Log.d(TAG, "createRecycler: " + articles.get(0).author);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireContext());
+        adapter = new MainScreenRcAdapter(articles);
         binding.recyclerView.setLayoutManager(layoutManager);
-        binding.recyclerView.setAdapter(new MainScreenRcAdapter(articles));
+        binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
     }
 
@@ -67,6 +97,18 @@ public class EntertainmentFragment extends MvpAppCompatFragment implements Enter
             binding.progress.setVisibility(View.VISIBLE);
         else
             binding.progress.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void reload() {
+        DiffUtil.DiffResult result = presenter.updateList();
+        if (adapter != null) {
+            adapter.reloadListAdapter(presenter.newArticlesList);
+            result.dispatchUpdatesTo(adapter);
+            presenter.oldArticlesList = presenter.newArticlesList;
+            loadData = false;
+            hideOrShowProgress(false);
+        }
     }
 
     private static final String TAG = "MyLog";

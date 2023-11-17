@@ -18,6 +18,7 @@ import com.example.news.domain.Screens;
 import com.example.news.ui.news_screen.ArticleParcel;
 import com.github.terrakok.cicerone.Screen;
 
+import java.util.Formatter;
 import java.util.List;
 
 public class MainScreenRcAdapter extends RecyclerView.Adapter<MainScreenViewHolder> {
@@ -37,13 +38,21 @@ public class MainScreenRcAdapter extends RecyclerView.Adapter<MainScreenViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MainScreenViewHolder holder, int position) {
-//        Log.d(TAG, "onBindViewHolder: " + articlesList.get(position).source.name);
         holder.binding.article.setText(articlesList.get(position).title);
         holder.binding.articleTitle.setText(articlesList.get(position).source.name);
         Glide
                 .with(holder.binding.getRoot())
                 .load(articlesList.get(position).urlToImage)
                 .into(holder.binding.imageArticle);
+
+        Formatter f = new Formatter();
+        String urlLoad = String.valueOf(f.format("https://besticon-demo.herokuapp.com/icon?url=%s&size=50..100..500",
+                articlesList.get(position).url));
+
+        Glide
+                .with(holder.binding.getRoot())
+                .load(urlLoad)
+                .into(holder.binding.logo);
 
         holder.binding.getRoot().setOnClickListener(v -> {
             ArticleParcel parceObject = new ArticleParcel(
@@ -63,6 +72,11 @@ public class MainScreenRcAdapter extends RecyclerView.Adapter<MainScreenViewHold
     @Override
     public int getItemCount() {
         return articlesList.size();
+    }
+
+    public void reloadListAdapter(List<Articles.Article> data) {
+        articlesList = data;
+        Log.d(TAG, "reloadListAdapter: " + articlesList.size());
     }
 
     private static final String TAG = "MyLog";

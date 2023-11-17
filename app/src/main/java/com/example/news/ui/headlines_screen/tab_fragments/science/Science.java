@@ -12,4 +12,6 @@ public interface Science extends MvpView {
     void createRecycler(List<Articles.Article> articles);
 
     void hideOrShowProgress(Boolean flag);
+
+    void reload();
 }

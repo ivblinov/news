@@ -3,6 +3,9 @@ package com.example.news.data.retrofit;
 import com.google.gson.annotations.SerializedName;
 
 public class Articles {
+//    @SerializedName("status")
+//    public String status;
+
     @SerializedName("totalResults")
     public int totalResults;
 

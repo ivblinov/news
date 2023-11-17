@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.headlines_screen.HeadlinesFragment">
 
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_headlines"
         android:layout_width="match_parent"
