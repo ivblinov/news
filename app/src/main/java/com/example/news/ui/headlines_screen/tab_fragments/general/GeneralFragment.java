@@ -3,6 +3,8 @@ package com.example.news.ui.headlines_screen.tab_fragments.general;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.SharedPreferencesKt;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -106,6 +108,10 @@ public class GeneralFragment extends MvpAppCompatFragment implements General {
             loadData = false;
             hideOrShowProgress(false);
         }
+    }
+
+    public void saveCategory() {
+
     }
 
     private static final String TAG="MyLog";

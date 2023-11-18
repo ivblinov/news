@@ -13,6 +13,9 @@ interface ArticleDao {
     @Query("SELECT * FROM article")
     fun getAll(): Flow<List<Article>>
 
+    @Query("SELECT * FROM article")
+    suspend fun getArticleList(): List<Article>
+
     @Insert
     suspend fun insert(article: Article)
 

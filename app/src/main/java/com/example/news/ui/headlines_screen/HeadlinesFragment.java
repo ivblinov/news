@@ -18,6 +18,7 @@ import com.example.news.ui.headlines_screen.tab_fragments.health.HealthFragment;
 import com.example.news.ui.headlines_screen.tab_fragments.science.ScienceFragment;
 import com.example.news.ui.headlines_screen.tab_fragments.sports.SportsFragment;
 import com.example.news.ui.headlines_screen.tab_fragments.technology.TechnologyFragment;
+import com.example.news.ui.search_screen.SearchViewModel;
 import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.Arrays;
 import moxy.MvpAppCompatFragment;

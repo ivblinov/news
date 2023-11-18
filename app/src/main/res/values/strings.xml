@@ -21,4 +21,6 @@
     <string name="icon_save">icon_save</string>
     <string name="button_back">button_back</string>
     <string name="image_logo">image logo</string>
+    <string name="button_clean">button_clean</string>
+    <string name="enter">Enter..</string>
 </resources>

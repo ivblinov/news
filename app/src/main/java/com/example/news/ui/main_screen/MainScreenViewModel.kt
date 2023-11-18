@@ -1,10 +1,12 @@
 package com.example.news.ui.main_screen
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.news.R
 import com.example.news.data.Repository
+import com.example.news.data.room.Article
 import com.example.news.domain.App
 import com.example.news.domain.Screens
 import com.example.news.ui.news_screen.ArticleParcel
@@ -12,8 +14,11 @@ import com.github.terrakok.cicerone.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 private const val TAG = "MyLog"
+private const val IS_OLD_NEWS = 14
 object MainScreenViewModel : ViewModel() {
     var titleAppBar = R.string.headlines
     var screenBottomNav: Screen = Screens.headlinesFragment()
@@ -91,6 +96,26 @@ object MainScreenViewModel : ViewModel() {
             repository.saveNews(news, articleId)
             _savedStatus.value = StateIconSave.NotSaved
         }
+    }
+
+    fun removeOldNews() {
+        viewModelScope.launch { getOldNewsList()
+            .forEach { articleDao.delete(it) } }
+    }
+
+    private suspend fun getOldNewsList(): List<Article> {
+        val articleList = articleDao.getArticleList()
+        return articleList.filter { getOldNews(it.publishedAt) > IS_OLD_NEWS }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getOldNews(dataPublished: String): Int {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'")
+        val publishedAt = dateFormat.parse(dataPublished)
+        val today = Calendar.getInstance().time
+        val resultDay = today.time - (publishedAt?.time ?: 0)
+        val dateFormatForDay = SimpleDateFormat("ddd")
+        return dateFormatForDay.format(resultDay).toInt()
     }
 
     val allArticles = this.articleDao.getAll()

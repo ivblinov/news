@@ -4,10 +4,13 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +19,8 @@ import com.example.news.R
 import com.example.news.databinding.ActivityMainScreenBinding
 import com.example.news.domain.App
 import com.example.news.domain.Screens
+import com.example.news.ui.search_screen.SearchState
+import com.example.news.ui.search_screen.SearchViewModel
 import com.example.news.ui.sources_screen.SourceRcAdapter
 import com.example.news.ui.sources_screen.SourcesViewModel
 import com.example.news.ui.sources_screen.only_one_source.ButtonBackState
@@ -23,6 +28,7 @@ import com.example.news.ui.sources_screen.only_one_source.OneSourceState
 import com.example.news.ui.sources_screen.only_one_source.OnlyOneSourceViewModel
 import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.AppNavigator
+import com.google.android.material.search.SearchView
 import kotlinx.coroutines.launch
 
 private const val TAG = "MyLog"
@@ -33,10 +39,12 @@ class MainScreenActivity : AppCompatActivity() {
     private val navigator = AppNavigator(this, R.id.fragment_container)
     private val viewModel: MainScreenViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        removeOldNews()
 
         binding.bottomNavigation.setOnItemSelectedListener {
             when(it.itemId) {
@@ -58,9 +66,21 @@ class MainScreenActivity : AppCompatActivity() {
             OnlyOneSourceViewModel.changeButtonGone()
         }
 
+        binding.btnTextClean.setOnClickListener {
+            binding.searchField.text.clear()
+        }
+
+        binding.btnSearchExit.setOnClickListener {
+            Log.d(TAG, "exit")
+        }
+
+        binding.searchField.addTextChangedListener {
+            Log.d(TAG, it.toString())
+        }
+
         binding.topAppBar.setOnMenuItemClickListener {
             if (it.itemId == R.id.search) {
-                Log.d(TAG, "clickedSearch")
+                SearchViewModel.changeStateActive()
             }
             if (it.itemId == R.id.filter) {
                 Log.d(TAG, "clickedFilter")
@@ -68,11 +88,38 @@ class MainScreenActivity : AppCompatActivity() {
             true
         }
 
+        fun activeSearchBar() {
+            binding.searchBar.visibility = View.VISIBLE
+            binding.searchBar.isActivated = true
+            binding.appBarLayout.visibility = View.INVISIBLE
+            binding.appBarLayout.isActivated = false
+        }
+
         binding.topAppBarNewsScreen.setOnMenuItemClickListener {
             if(it.itemId == R.id.save) {
                 viewModel.clickedOnSaveNews()
             }
             true
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                SearchViewModel.searchState.collect { searchState ->
+                    when (searchState) {
+                        SearchState.InActive -> {
+                        }
+                        SearchState.Active -> {
+                            activeSearchBar()
+                        }
+                        SearchState.Request -> {
+
+                        }
+                        SearchState.Received -> {
+
+                        }
+                    }
+                }
+            }
         }
 
         lifecycleScope.launch {
@@ -151,8 +198,6 @@ class MainScreenActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun clickedButtonOnBottomNav(title: Int, screen: Screen) {
         newRootScreen(screen)
         binding.topAppBar.setTitle(title)
@@ -215,7 +260,16 @@ class MainScreenActivity : AppCompatActivity() {
         App.instance.router.newRootScreen(screen = screen)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun removeOldNews() {
+        MainScreenViewModel.removeOldNews()
+    }
+
     private fun navigateTo(screen: Screen) {
         App.instance.router.navigateTo(screen = screen)
+    }
+
+    fun getObj() {
+        SearchViewModel.category = "a"
     }
 }

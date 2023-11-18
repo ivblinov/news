@@ -90,6 +90,10 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
 //    ksp("androidx.room:room-compiler:$roomVersion")
 
+    // dagger
+    implementation("com.google.dagger:dagger:2.36")
+    kapt("com.google.dagger:dagger-compiler:2.36")
+
     // glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
 

@@ -9,6 +9,7 @@ class DataConverter {
     var isMidday: String = ""
 
     fun generateData() = "${monthMap[month]} $day, $year | $hour:$minute $isMidday"
+    fun generateDay() = "$year$month$day"
 
     companion object {
         val monthMap = mutableMapOf(

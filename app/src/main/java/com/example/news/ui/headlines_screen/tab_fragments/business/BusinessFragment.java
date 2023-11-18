@@ -16,6 +16,9 @@ import android.view.ViewGroup;
 import com.example.news.data.retrofit.Articles;
 import com.example.news.databinding.FragmentBusinessBinding;
 import com.example.news.ui.main_screen.MainScreenRcAdapter;
+import com.example.news.ui.search_screen.SearchViewModel;
+import com.example.news.ui.sources_screen.SourcesViewModel;
+
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
