@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentKt;
+
 import com.example.news.R;
 import com.example.news.databinding.FragmentHeadlinesBinding;
 import com.example.news.ui.headlines_screen.tab_fragments.business.BusinessFragment;
@@ -65,6 +67,11 @@ public class HeadlinesFragment extends MvpAppCompatFragment implements Headlines
     HeadlinesPresenter presenter;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,6 +99,10 @@ public class HeadlinesFragment extends MvpAppCompatFragment implements Headlines
                     tab.setText(tabListTitles[position]);
                     tab.setIcon(tabListIcon[position]);
                 }).attach();
+    }
+
+    public void showLog() {
+        Log.d(TAG, "showLog: ");
     }
 
     private static final String TAG = "MyLog";

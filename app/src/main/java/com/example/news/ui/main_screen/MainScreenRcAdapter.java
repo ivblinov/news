@@ -20,10 +20,10 @@ import com.github.terrakok.cicerone.Screen;
 
 import java.util.Formatter;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MainScreenRcAdapter extends RecyclerView.Adapter<MainScreenViewHolder> {
     private List<Articles.Article> articlesList;
-
 
     public MainScreenRcAdapter(List<Articles.Article> articles) {
         articlesList = articles;
@@ -76,7 +76,10 @@ public class MainScreenRcAdapter extends RecyclerView.Adapter<MainScreenViewHold
 
     public void reloadListAdapter(List<Articles.Article> data) {
         articlesList = data;
-        Log.d(TAG, "reloadListAdapter: " + articlesList.size());
+    }
+
+    public List<Articles.Article> getArticlesList() {
+        return articlesList;
     }
 
     private static final String TAG = "MyLog";

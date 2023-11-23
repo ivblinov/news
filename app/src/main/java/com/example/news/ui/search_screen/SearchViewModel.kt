@@ -14,4 +14,8 @@ object SearchViewModel : ViewModel() {
     fun changeStateActive() {
         _searchState.value = SearchState.Active
     }
+
+    fun changeStateInActive() {
+        _searchState.value = SearchState.InActive
+    }
 }

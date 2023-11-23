@@ -1,31 +1,29 @@
 package com.example.news.ui.headlines_screen.tab_fragments.business;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import com.example.news.data.retrofit.Articles;
 import com.example.news.databinding.FragmentBusinessBinding;
 import com.example.news.ui.main_screen.MainScreenRcAdapter;
-import com.example.news.ui.search_screen.SearchViewModel;
-import com.example.news.ui.sources_screen.SourcesViewModel;
 
 import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import moxy.MvpAppCompatFragment;
 import moxy.presenter.InjectPresenter;
-
 
 public class BusinessFragment extends MvpAppCompatFragment implements Business {
 
@@ -65,7 +63,6 @@ public class BusinessFragment extends MvpAppCompatFragment implements Business {
                 itemCount = layoutManager.getItemCount();
                 lastVisibleItem = layoutManager.findViewByPosition(itemCount - 1);
                 if (lastVisibleItem != null && !loadData) {
-                    Log.d(TAG, "if ____");
                     presenter.getExtraArticles();
                     hideOrShowProgress(true);
                     loadData = true;
@@ -74,8 +71,6 @@ public class BusinessFragment extends MvpAppCompatFragment implements Business {
         });
 
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-
-            Log.d(TAG, "onRefresh: ");
             presenter.page = 0;
             presenter.newArticlesList = new ArrayList<>();
             presenter.getExtraArticles();
@@ -85,10 +80,24 @@ public class BusinessFragment extends MvpAppCompatFragment implements Business {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getParentFragmentManager().setFragmentResultListener(
+                "key", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String res = result.getString("1");
+                presenter.orderResultSearch(res);
+            }
+        });
+    }
+
+    @Override
     public void createRecycler(@NonNull List<Articles.Article> articles) {
         adapter = new MainScreenRcAdapter(articles);
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
+        binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
     }
 
@@ -102,9 +111,8 @@ public class BusinessFragment extends MvpAppCompatFragment implements Business {
 
     @Override
     public void reload() {
-        DiffUtil.DiffResult result = presenter.updateList();
+        DiffUtil.DiffResult result = presenter.updateList(adapter.getArticlesList());
         if (adapter != null) {
-            Log.d(TAG, "reload: size" + presenter.newArticlesList.size());
             adapter.reloadListAdapter(presenter.newArticlesList);
             result.dispatchUpdatesTo(adapter);
             presenter.oldArticlesList = presenter.newArticlesList;
@@ -112,6 +120,4 @@ public class BusinessFragment extends MvpAppCompatFragment implements Business {
             hideOrShowProgress(false);
         }
     }
-
-    private static final String TAG = "MyLog";
 }

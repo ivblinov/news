@@ -9,9 +9,12 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,6 +22,7 @@ import com.example.news.R
 import com.example.news.databinding.ActivityMainScreenBinding
 import com.example.news.domain.App
 import com.example.news.domain.Screens
+import com.example.news.ui.headlines_screen.tab_fragments.general.GeneralPresenter
 import com.example.news.ui.search_screen.SearchState
 import com.example.news.ui.search_screen.SearchViewModel
 import com.example.news.ui.sources_screen.SourceRcAdapter
@@ -29,6 +33,7 @@ import com.example.news.ui.sources_screen.only_one_source.OnlyOneSourceViewModel
 import com.github.terrakok.cicerone.Screen
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import com.google.android.material.search.SearchView
+import io.reactivex.rxjava3.core.Flowable
 import kotlinx.coroutines.launch
 
 private const val TAG = "MyLog"
@@ -72,10 +77,12 @@ class MainScreenActivity : AppCompatActivity() {
 
         binding.btnSearchExit.setOnClickListener {
             Log.d(TAG, "exit")
+            SearchViewModel.changeStateInActive()
         }
 
         binding.searchField.addTextChangedListener {
-            Log.d(TAG, it.toString())
+            val fragment = binding.fragmentContainer.getFragment<Fragment>()
+            fragment.childFragmentManager.setFragmentResult("key", bundleOf("1" to it.toString()))
         }
 
         binding.topAppBar.setOnMenuItemClickListener {
@@ -86,13 +93,6 @@ class MainScreenActivity : AppCompatActivity() {
                 Log.d(TAG, "clickedFilter")
             }
             true
-        }
-
-        fun activeSearchBar() {
-            binding.searchBar.visibility = View.VISIBLE
-            binding.searchBar.isActivated = true
-            binding.appBarLayout.visibility = View.INVISIBLE
-            binding.appBarLayout.isActivated = false
         }
 
         binding.topAppBarNewsScreen.setOnMenuItemClickListener {
@@ -107,6 +107,7 @@ class MainScreenActivity : AppCompatActivity() {
                 SearchViewModel.searchState.collect { searchState ->
                     when (searchState) {
                         SearchState.InActive -> {
+                            inActiveSearchBar()
                         }
                         SearchState.Active -> {
                             activeSearchBar()
@@ -196,6 +197,20 @@ class MainScreenActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun activeSearchBar() {
+        binding.searchBar.visibility = View.VISIBLE
+        binding.searchBar.isActivated = true
+        binding.appBarLayout.visibility = View.INVISIBLE
+        binding.appBarLayout.isActivated = false
+    }
+
+    fun inActiveSearchBar() {
+        binding.searchBar.visibility = View.INVISIBLE
+        binding.searchBar.isActivated = false
+        binding.appBarLayout.visibility = View.VISIBLE
+        binding.appBarLayout.isActivated = true
     }
 
     private fun clickedButtonOnBottomNav(title: Int, screen: Screen) {

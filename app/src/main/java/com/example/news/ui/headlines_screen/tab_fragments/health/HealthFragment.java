@@ -3,6 +3,7 @@ package com.example.news.ui.headlines_screen.tab_fragments.health;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -73,6 +74,19 @@ public class HealthFragment extends MvpAppCompatFragment implements Health {
             binding.progress.setVisibility(View.INVISIBLE);
             binding.swipeRefreshLayout.setRefreshing(false);
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getParentFragmentManager().setFragmentResultListener(
+                "key", this, new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        String res = result.getString("1");
+                        Log.d(TAG, "Health - " + res);
+                    }
+                });
     }
 
     @Override

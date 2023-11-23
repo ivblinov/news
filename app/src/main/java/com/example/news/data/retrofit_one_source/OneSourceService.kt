@@ -3,7 +3,6 @@ package com.example.news.data.retrofit_one_source
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.Query
 
@@ -26,7 +25,6 @@ object OneSourceService {
 
 interface OneSourceApi {
     @Headers("X-Api-Key: $api_2")
-//    @GET("top-headlines")
     @GET("everything")
     suspend fun getSourceList(
         @Query("sources") sources: String = "bbc-news",

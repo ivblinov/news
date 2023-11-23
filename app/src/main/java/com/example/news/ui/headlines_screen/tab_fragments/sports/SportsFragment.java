@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -82,6 +83,19 @@ public class SportsFragment extends MvpAppCompatFragment implements Sports {
             binding.progress.setVisibility(View.INVISIBLE);
             binding.swipeRefreshLayout.setRefreshing(false);
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getParentFragmentManager().setFragmentResultListener(
+                "key", this, new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                        String res = result.getString("1");
+                        Log.d(TAG, "Sports - " + res);
+                    }
+                });
     }
 
     @Override

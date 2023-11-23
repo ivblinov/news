@@ -161,8 +161,6 @@ class NewsScreenFragment : Fragment() {
             item.hour = this.substring(11 until 13)
             item.minute = this.substring(14 until 16)
             item.isMidday = if ("00" <= item.hour && item.hour < "12") "AM" else "PM"
-
-            Log.d(TAG, "Month = ${item.month}")
             item.generateData()
         }
     }

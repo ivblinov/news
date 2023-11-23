@@ -19,4 +19,13 @@ public interface ApiService {
             @Query("pageSize") Integer pageSize,
             @Query("page") Integer page
     );
+
+    @Headers("X-Api-Key: a9201dcf799849e18275d09222d2aafa")
+    @GET("top-headlines?country=us")
+    Call<Articles> getTopHeadlines(
+            @Query("category") String category,
+            @Query("pageSize") Integer pageSize,
+            @Query("page") Integer page,
+            @Query("q") String q
+    );
 }

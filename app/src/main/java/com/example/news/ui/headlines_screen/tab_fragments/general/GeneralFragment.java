@@ -1,5 +1,6 @@
 package com.example.news.ui.headlines_screen.tab_fragments.general;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -83,10 +84,24 @@ public class GeneralFragment extends MvpAppCompatFragment implements General {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getParentFragmentManager().setFragmentResultListener(
+                "key", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String res = result.getString("1");
+                presenter.orderResultSearch(res);
+            }
+        });
+    }
+
     public void createRecycler(@NonNull List<Articles.Article> articles) {
         adapter = new MainScreenRcAdapter(articles);
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
+        binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
     }
 
@@ -100,7 +115,7 @@ public class GeneralFragment extends MvpAppCompatFragment implements General {
 
     @Override
     public void reload() {
-        DiffUtil.DiffResult result = presenter.updateList();
+        DiffUtil.DiffResult result = presenter.updateList(adapter.getArticlesList());
         if (adapter != null) {
             adapter.reloadListAdapter(presenter.newArticlesList);
             result.dispatchUpdatesTo(adapter);
@@ -108,10 +123,6 @@ public class GeneralFragment extends MvpAppCompatFragment implements General {
             loadData = false;
             hideOrShowProgress(false);
         }
-    }
-
-    public void saveCategory() {
-
     }
 
     private static final String TAG="MyLog";
