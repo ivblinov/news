@@ -19,14 +19,11 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        WindowCompat.setDecorFitsSystemWindows(window, true)
-//        setStatusBarColor(R.color.transparentStatusBar)
-
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lottieView.playAnimation()
         binding.lottieView.addAnimatorUpdateListener {
-            if (it.animatedValue as Float > 0.80) {     // изменить на 0.99
+            if (it.animatedValue as Float > 0.80) {
                 binding.lottieView.cancelAnimation()
                 App.instance.router.newRootScreen(Screens.mainScreen(this))
             }
@@ -41,19 +38,6 @@ class SplashScreenActivity : AppCompatActivity() {
     override fun onPause() {
         App.instance.navigatorHolder.removeNavigator()
         super.onPause()
-        Log.d(TAG, "onPause: ")
-//        WindowCompat.setDecorFitsSystemWindows(window, false)
-//        setStatusBarColor(R.color.primary)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop: ")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy: ")
     }
 
     private fun setStatusBarColor(color: Int) {
