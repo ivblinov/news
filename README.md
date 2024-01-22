@@ -10,6 +10,7 @@
 
 - языки - Kotlin, Java
 - архитектура - MVVM(viewmodel), MVP(moxy), Clean Architecture
-- база данных - SQLite(retrofit)
+- база данных - SQLite(room)
+- сеть - retrofit
 - реализация многопоточности и асинхронности - Coroutines, RxJava
 - навигация - Cicerone, fragments и bottom navigation
