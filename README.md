@@ -14,3 +14,11 @@
 - сеть - retrofit
 - реализация многопоточности и асинхронности - Coroutines, RxJava
 - навигация - Cicerone, fragments и bottom navigation
+
+## Запуск проекта:
+
+1. Клонируйте проект командой:
+
+   git clone https://github.com/ivblinov/news.git
+
+2. Запустите проект в AndroidStudio.
